@@ -28,8 +28,8 @@ namespace LocationSearch.API
             services.AddTransient(typeof(ILocationService), typeof(LocationService));
 
             // use real database
-            // Requires LocalDB which can be installed with SQL Server Express 2016
-            // https://www.microsoft.com/en-us/download/details.aspx?id=54284
+            // Requires LocalDB which can be installed with SQL Server Express 2019
+            //https://www.microsoft.com/en-us/Download/details.aspx?id=101064
             services.AddDbContext<LocationContext>(c =>
                 c.UseSqlServer(Configuration.GetConnectionString("LocationConnection"), b => b.MigrationsAssembly("Infrastructure")));
 
