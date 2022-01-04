@@ -45,11 +45,11 @@ namespace LocationSearch.API.LocationEndPoints
             if (request.Location == null)
                 return BadRequest("Location must be set");
 
-            if (request.MaxResults < 1)
-                return BadRequest("MaxResult can't be less than 1");
-
             if (request.MaxDistance < 0)
                 return BadRequest("MaxDistance can't be less than 0");
+
+            if (request.MaxResults < 1)
+                return BadRequest("MaxResult can't be less than 1");
 
             var response = new ListLocationResponse();
 

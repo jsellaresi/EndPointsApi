@@ -1,6 +1,8 @@
 ﻿using LocationSearch.API.LocationEndPoints;
 using LocationSearch.ApplicationCore.Extensions;
+using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
@@ -16,9 +18,43 @@ namespace FunctionalTests.API.LocationEndPoints
 
         public HttpClient Client { get; }
 
+        [Fact]
+        public async Task BadRequestLocationEmpty()
+        {
+            var listLocationRequest = new ListLocationRequest
+            {
+                Location = null,
+                MaxDistance = 100,
+                MaxResults = 10,
+            };
+
+            var response = await Client.GetAsync(getCallUrl(listLocationRequest));
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
 
         [Fact]
-        public async Task ReturnsNotFoundLocations()
+        public async Task BadRequestMaxDistance()
+        {
+            var listLocationRequest = GetLocationRequest(-1, 1);
+
+            var response = await Client.GetAsync(getCallUrl(listLocationRequest));
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task BadRequestMaxResults()
+        {
+            var listLocationRequest = GetLocationRequest(1, 0);
+
+            var response = await Client.GetAsync(getCallUrl(listLocationRequest));
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task ReturnsSingleLocation()
         {
             int expectedCount = 1;
             var listLocationRequest = new ListLocationRequest
@@ -27,29 +63,31 @@ namespace FunctionalTests.API.LocationEndPoints
                 MaxDistance = 100,
                 MaxResults = 10,
             };
-            var response = await Client.GetAsync(getCallUrl(listLocationRequest));
 
+            var response = await Client.GetAsync(getCallUrl(listLocationRequest));
             response.EnsureSuccessStatusCode();
+
             var stringResponse = await response.Content.ReadAsStringAsync();
             var model = stringResponse.FromJson<ListLocationResponse>();
 
             Assert.Equal(expectedCount, model.Locations.Count());
         }
 
-
         [Theory]
-        [InlineData(1, 4)]
-        [InlineData(2, 4)]
-        [InlineData(5, 4)]
-        public async Task ReturnsSuccessGivenValidNewItemAndAdminUserToken(int maxDistance, int expectedCount)
+        [InlineData(1, 100)]
+        [InlineData(10, 1000)]
+        [InlineData(100, 10000)]
+        public async Task ReturnsSuccessGivenValidNewItemAndAdminUserToken(int maxDistance, int maxResults)
         {
-            var listLocationRequest = GetLocationRequest(maxDistance, 10);
+            var listLocationRequest = GetLocationRequest(maxDistance, maxResults);
+
             var response = await Client.GetAsync(getCallUrl(listLocationRequest));
             response.EnsureSuccessStatusCode();
+
             var stringResponse = await response.Content.ReadAsStringAsync();
             var model = stringResponse.FromJson<ListLocationResponse>();
 
-            Assert.Equal(expectedCount, model.Locations.Count());
+            Assert.True(model.Locations.Count() <= maxResults);
         }
 
 
@@ -65,7 +103,9 @@ namespace FunctionalTests.API.LocationEndPoints
 
         private string getCallUrl(ListLocationRequest listLocationRequest)
         {
-            return $"api/getlocations?Location.Latitude={listLocationRequest.Location.Latitude}&Location.Longitude={listLocationRequest.Location.Longitude}&{nameof(listLocationRequest.MaxDistance)}={listLocationRequest.MaxDistance}&{nameof(listLocationRequest.MaxResults)}={listLocationRequest.MaxResults}";
+            NumberFormatInfo numberFormatInfo = new NumberFormatInfo();
+            numberFormatInfo.NumberDecimalSeparator = ".";
+            return $"api/getlocations?Location.Latitude={listLocationRequest.Location?.Latitude.ToString(numberFormatInfo)}&Location.Longitude={listLocationRequest.Location?.Longitude.ToString(numberFormatInfo)}&{nameof(listLocationRequest.MaxDistance)}={listLocationRequest.MaxDistance}&{nameof(listLocationRequest.MaxResults)}={listLocationRequest.MaxResults}";
         }
     }
 }
