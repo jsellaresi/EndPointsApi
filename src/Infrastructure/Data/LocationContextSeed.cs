@@ -21,12 +21,6 @@ namespace LocationSearch.Infrastructure.Data
             var retryForAvailability = retry;
             try
             {
-                if (locationContext.Database.IsSqlServer())
-                {
-                    locationContext.Database.Migrate();
-                    locationContext.Database.EnsureCreated();
-                }
-
                 if (!await locationContext.Locations.AnyAsync())
                 {
                     await locationContext.Locations.AddRangeAsync(GetPreconfiguredLocations());

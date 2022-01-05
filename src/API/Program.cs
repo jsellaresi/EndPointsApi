@@ -1,5 +1,6 @@
 using LocationSearch.Infrastructure.Data;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -21,8 +22,15 @@ namespace LocationSearch.API
                 var loggerFactory = services.GetRequiredService<ILoggerFactory>();
                 try
                 {
-                    var catalogContext = services.GetRequiredService<LocationContext>();
-                    await LocationContextSeed.SeedAsync(catalogContext, loggerFactory);
+                    var locationContext = services.GetRequiredService<LocationContext>();
+
+                    if (locationContext.Database.IsSqlServer())
+                    {
+                        locationContext.Database.Migrate();
+                        locationContext.Database.EnsureCreated();
+                    }
+
+                    await LocationContextSeed.SeedAsync(locationContext, loggerFactory);
                 }
                 catch (Exception ex)
                 {
