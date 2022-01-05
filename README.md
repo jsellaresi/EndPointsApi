@@ -47,6 +47,9 @@
 
 # Prerequisites
 
+ Requires to have installed the .Net5 runtime.
+ https://dotnet.microsoft.com/en-us/download/dotnet/5.0
+ 
  Requires LocalDB which can be installed with SQL Server Express 2019
  https://www.microsoft.com/en-us/Download/details.aspx?id=101064
 
