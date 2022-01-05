@@ -61,6 +61,14 @@ namespace IntegrationTests.ApplicationCore.Services.LocationServiceTests
             var locations = await service.GetLocationsAsync(locationRequest);
 
             Assert.Equal(expectedCount, locations.Count());
+
+            if (locations.Count() > 1)
+            {
+                var firstLocation = locations.First();
+                var lastLocation = locations.Last();
+
+                Assert.True(firstLocation.CalculateDistance(locationRequest.Location) < lastLocation.CalculateDistance(locationRequest.Location));
+            }
         }
 
         [Theory]
@@ -81,6 +89,14 @@ namespace IntegrationTests.ApplicationCore.Services.LocationServiceTests
             var locations = await service.GetLocationsAsync(locationRequest);
 
             Assert.Equal(expectedCount, locations.Count());
+
+            if (locations.Count() > 1)
+            {
+                var firstLocation = locations.First();
+                var lastLocation = locations.Last();
+
+                Assert.True(firstLocation.CalculateDistance(locationRequest.Location) < lastLocation.CalculateDistance(locationRequest.Location));
+            }
         }
 
 

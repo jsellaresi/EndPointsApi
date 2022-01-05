@@ -105,6 +105,7 @@ namespace FunctionalTests.API.LocationEndPoints
         {
             NumberFormatInfo numberFormatInfo = new NumberFormatInfo();
             numberFormatInfo.NumberDecimalSeparator = ".";
+
             return $"api/getlocations?Location.Latitude={listLocationRequest.Location?.Latitude.ToString(numberFormatInfo)}&Location.Longitude={listLocationRequest.Location?.Longitude.ToString(numberFormatInfo)}&{nameof(listLocationRequest.MaxDistance)}={listLocationRequest.MaxDistance}&{nameof(listLocationRequest.MaxResults)}={listLocationRequest.MaxResults}";
         }
     }

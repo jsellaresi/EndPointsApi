@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Serilog;
 
 namespace LocationSearch.API
 {
@@ -23,6 +24,10 @@ namespace LocationSearch.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            Log.Logger = new LoggerConfiguration()
+                            .ReadFrom.Configuration(Configuration)
+                            .Enrich.FromLogContext()
+                            .CreateLogger();
 
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
             services.AddTransient(typeof(ILocationService), typeof(LocationService));
