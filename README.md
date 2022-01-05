@@ -17,7 +17,8 @@
 
 ## 2. Infrastructure
 
- This project contains EntityFramework migrations, database context and its configuration, a concrete repository, csv mapper to correct parse the locations.csv header with the Location.cs, also I included the csv file inside SeedData folder to easily fill the database by reading it.
+ This project contains EntityFramework migrations, database context and its configuration, a concrete repository, csv mapper to correct parse the locations.csv header with the Location.cs. 
+ The SeedData folder contains the csv file to easily fill the database by reading it and a static class SeedLocationsData that allows to save all locations in memory or in the data base, the latter takes around 3 minutes at first execution.
 
 ## 3. API
 

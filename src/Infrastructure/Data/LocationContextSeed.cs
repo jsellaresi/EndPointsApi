@@ -1,15 +1,7 @@
-﻿using CsvHelper;
-using LocationSearch.ApplicationCore.Entities;
-using LocationSearch.Infrastructure.CSVMapping;
+﻿using LocationSearch.Infrastructure.Data.SeedData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LocationSearch.Infrastructure.Data
@@ -21,11 +13,16 @@ namespace LocationSearch.Infrastructure.Data
             var retryForAvailability = retry;
             try
             {
-                if (!await locationContext.Locations.AnyAsync())
+                if (locationContext.Database.IsSqlServer())
                 {
-                    await locationContext.Locations.AddRangeAsync(GetPreconfiguredLocations());
+                    locationContext.Database.Migrate();
+                    locationContext.Database.EnsureCreated();
 
-                    await locationContext.SaveChangesAsync();
+                    await SeedLocationsData.SeedInDataTable(locationContext);
+                }
+                else
+                {
+                    await SeedLocationsData.SeedInMemory(locationContext);
                 }
             }
             catch (Exception ex)
@@ -37,23 +34,6 @@ namespace LocationSearch.Infrastructure.Data
                 log.LogError(ex.Message);
                 await SeedAsync(locationContext, loggerFactory, retryForAvailability);
                 throw;
-            }
-        }
-
-        private static IEnumerable<Location> GetPreconfiguredLocations()
-        {
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            string resourceName = "LocationSearch.Infrastructure.Data.SeedData.locations.csv";
-
-            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-            {
-                using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
-                {
-                    CsvReader csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);
-                    csvReader.Context.RegisterClassMap<LocationCSVMap>();
-
-                    return csvReader.GetRecords<Location>().ToArray();
-                }
             }
         }
     }

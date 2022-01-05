@@ -21,6 +21,45 @@ namespace LocationSearch.API
 
         public IConfiguration Configuration { get; }
 
+        public void ConfigureDevelopmentServices(IServiceCollection services)
+        {
+            // use in-memory database
+            //ConfigureInMemoryDatabases(services);
+
+            // use real database
+            ConfigureProductionServices(services);
+        }
+
+        private void ConfigureInMemoryDatabases(IServiceCollection services)
+        {
+            services.AddDbContext<LocationContext>(c =>
+                c.UseInMemoryDatabase("Location"));
+
+            ConfigureServices(services);
+        }
+
+        public void ConfigureProductionServices(IServiceCollection services)
+        {
+            // use real database
+            // Requires LocalDB which can be installed with SQL Server Express 2019
+            //https://www.microsoft.com/en-us/Download/details.aspx?id=101064
+            services.AddDbContext<LocationContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("LocationConnection"), sqlServerOptions =>
+                {
+                    int secondsToWait = 60 * 2; // 2min
+                    sqlServerOptions.CommandTimeout(secondsToWait);
+
+                    sqlServerOptions.MigrationsAssembly("Infrastructure");
+                }));
+
+            ConfigureServices(services);
+        }
+
+        public void ConfigureTestingServices(IServiceCollection services)
+        {
+            ConfigureInMemoryDatabases(services);
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -31,12 +70,6 @@ namespace LocationSearch.API
 
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
             services.AddTransient(typeof(ILocationService), typeof(LocationService));
-
-            // use real database
-            // Requires LocalDB which can be installed with SQL Server Express 2019
-            //https://www.microsoft.com/en-us/Download/details.aspx?id=101064
-            services.AddDbContext<LocationContext>(c =>
-                c.UseSqlServer(Configuration.GetConnectionString("LocationConnection"), b => b.MigrationsAssembly("Infrastructure")));
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
