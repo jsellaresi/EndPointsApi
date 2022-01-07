@@ -1,6 +1,14 @@
 # ASP.NET EndPointsApi
  Web API REST using EndPoints approach instead controllers
 
+# Prerequisites
+
+ Requires to have installed the .Net5 runtime.
+ https://dotnet.microsoft.com/en-us/download/dotnet/5.0
+ 
+ Requires LocalDB which can be installed with SQL Server Express 2019
+ https://www.microsoft.com/en-us/Download/details.aspx?id=101064
+
 # Solution structure
 
 ## Source
@@ -45,14 +53,6 @@
 ## 3. FunctionalTests
 
  This project contains the endpoint tests, also have the CustomWebApplicationFactory to provide us the testing environment for all our tests.
-
-# Prerequisites
-
- Requires to have installed the .Net5 runtime.
- https://dotnet.microsoft.com/en-us/download/dotnet/5.0
- 
- Requires LocalDB which can be installed with SQL Server Express 2019
- https://www.microsoft.com/en-us/Download/details.aspx?id=101064
 
 # Insights
  I decided not to use the common aproach of MVC controllers as we want the best maintainability for this project, to do this I chose https://github.com/ardalis/ApiEndpoints that offer me an easly implementation of it.
