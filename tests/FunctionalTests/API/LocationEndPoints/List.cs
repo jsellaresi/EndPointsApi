@@ -77,7 +77,7 @@ namespace FunctionalTests.API.LocationEndPoints
         [InlineData(1, 100)]
         [InlineData(10, 1000)]
         [InlineData(100, 10000)]
-        public async Task ReturnsSuccessGivenValidNewItemAndAdminUserToken(int maxDistance, int maxResults)
+        public async Task ReturnsNumberOfLocationsExpected(int maxDistance, int maxResults)
         {
             var listLocationRequest = GetLocationRequest(maxDistance, maxResults);
 
@@ -87,6 +87,7 @@ namespace FunctionalTests.API.LocationEndPoints
             var stringResponse = await response.Content.ReadAsStringAsync();
             var model = stringResponse.FromJson<ListLocationResponse>();
 
+            Assert.True(model.Locations.Count() > maxResults / 2);
             Assert.True(model.Locations.Count() <= maxResults);
         }
 
