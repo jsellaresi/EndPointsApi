@@ -21,7 +21,7 @@
 
 ## 1. ApplicationCore
 
- This project contains the database and auxiliar entities, the specifications to query in repository, the services with it's logic, the interfaces and some extensions.
+ This project contains the database and auxiliar entities, the specifications to query in repository, the services with its logic, the interfaces and some extensions.
 
 ## 2. Infrastructure
 
@@ -44,7 +44,7 @@
 
 ## 1. UnitTests
 
- This project contains the specifications and services tests, also a builder to help us to create lists of Locations easly.
+ This project contains the specifications and services tests, also a builder to help us to create lists of Locations easily.
 
 ## 2. IntegrationTests
 
@@ -55,7 +55,7 @@
  This project contains the endpoint tests, also have the CustomWebApplicationFactory to provide us the testing environment for all our tests.
 
 # Insights
- I decided not to use the common aproach of MVC controllers as we want the best maintainability for this project, to do this I chose https://github.com/ardalis/ApiEndpoints that offer me an easly implementation of it.
+ I decided not to use the common aproach of MVC controllers as we want the best maintainability for this project, to do this I chose https://github.com/ardalis/ApiEndpoints that offer me an easily implementation of it.
  Also I'm using the specification pattern that give us a powerful tool to manage repository calls without having alot of concrete repositories and repeat our where clauses in many methods. 
 
  About how to calculate the locations we are looking for, I used the method given for the OrderBy clause and before use it, I used a MaxDistanceSquare class, which gives me a square coordinates containing the requested location. 
