@@ -24,9 +24,10 @@ namespace UnitTests.ApplicationCore.Specifications
         }
 
         [Theory]
-        [InlineData(1, 4)]
-        [InlineData(2, 4)]
-        [InlineData(5, 4)]
+        [InlineData(100, 0)]
+        [InlineData(1000, 4)]
+        [InlineData(1500, 4)]
+        [InlineData(5000, 4)]
         public void MatchExpectedNumberOfNearLocations(int maxDistance, int expectedCount)
         {
             var location = GetLocation();
@@ -44,9 +45,9 @@ namespace UnitTests.ApplicationCore.Specifications
 
         [Theory]
         [InlineData(1, 0)]
-        [InlineData(2, 1)]
-        [InlineData(3, 2)]
-        [InlineData(10, 4)]
+        [InlineData(2000, 1)]
+        [InlineData(3000, 2)]
+        [InlineData(10000, 4)]
         public void MatchExpectedNumberOfFarLocations(int maxDistance, int expectedCount)
         {
             var location = GetLocation();

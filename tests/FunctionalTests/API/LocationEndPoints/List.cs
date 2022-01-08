@@ -60,7 +60,7 @@ namespace FunctionalTests.API.LocationEndPoints
             var listLocationRequest = new ListLocationRequest
             {
                 Location = new LocationRequestDto(0, 0),
-                MaxDistance = 100,
+                MaxDistance = 100000,
                 MaxResults = 10,
             };
 
@@ -74,9 +74,9 @@ namespace FunctionalTests.API.LocationEndPoints
         }
 
         [Theory]
-        [InlineData(1, 100)]
-        [InlineData(10, 1000)]
-        [InlineData(100, 10000)]
+        [InlineData(1000, 100)]
+        [InlineData(10000, 1000)]
+        [InlineData(100000, 10000)]
         public async Task ReturnsNumberOfLocationsExpected(int maxDistance, int maxResults)
         {
             var listLocationRequest = GetLocationRequest(maxDistance, maxResults);

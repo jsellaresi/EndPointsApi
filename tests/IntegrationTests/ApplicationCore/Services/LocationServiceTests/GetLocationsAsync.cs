@@ -45,9 +45,9 @@ namespace IntegrationTests.ApplicationCore.Services.LocationServiceTests
         }
 
         [Theory]
-        [InlineData(1, 4)]
-        [InlineData(2, 4)]
-        [InlineData(5, 4)]
+        [InlineData(1000, 4)]
+        [InlineData(2000, 4)]
+        [InlineData(5000, 4)]
         public async Task MatchNearLocations(int maxDistance, int expectedCount)
         {
             var locationsBuilder = new LocationsBuilder();
@@ -72,10 +72,10 @@ namespace IntegrationTests.ApplicationCore.Services.LocationServiceTests
         }
 
         [Theory]
-        [InlineData(1, 0)]
-        [InlineData(2, 1)]
-        [InlineData(3, 2)]
-        [InlineData(10, 4)]
+        [InlineData(10, 0)]
+        [InlineData(2000, 1)]
+        [InlineData(3000, 2)]
+        [InlineData(10000, 4)]
         public async Task MatchFarLocations(int maxDistance, int expectedCount)
         {
             var locationsBuilder = new LocationsBuilder();

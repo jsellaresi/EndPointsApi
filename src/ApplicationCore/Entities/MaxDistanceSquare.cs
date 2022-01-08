@@ -9,10 +9,14 @@ namespace LocationSearch.ApplicationCore.Entities
 
         public MaxDistanceSquare(Location location, int maxDistance)
         {
-            var minKilometerPerLatitude = 110.5667;
-            var kmPerLongitude = Math.Cos(location.Latitude) * 111.3215;
-            MinLatitude = location.Latitude - maxDistance / minKilometerPerLatitude;
-            MaxLatitude = location.Latitude + maxDistance / minKilometerPerLatitude;
+            var minKilometersPerLatitude = 110.5667 * 1000;
+            var kmPerLongitude = Math.Cos(location.Latitude) * 111.3215 * 1000;
+
+            //var minKilometersPerLatitude = 1.375 * 1000;
+            //var kmPerLongitude = Math.Cos(location.Latitude) * 1.391 * 1000;
+
+            MinLatitude = location.Latitude - maxDistance / minKilometersPerLatitude;
+            MaxLatitude = location.Latitude + maxDistance / minKilometersPerLatitude;
             MinLongitude = location.Longitude - maxDistance / kmPerLongitude;
             MaxLongitude = location.Longitude + maxDistance / kmPerLongitude;
         }
